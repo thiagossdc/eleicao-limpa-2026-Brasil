@@ -1,0 +1,52 @@
+<section class="sync">
+  <h1>Sincronizar dados do TSE</h1>
+  <p class="sync__lead">
+    Baixa os ZIPs oficiais (candidatos e motivo da cassação), extrai o CSV da UF escolhida e grava no SQLite.
+    Para o arquivo nacional, escolha <strong>BRASIL</strong> (volume grande).
+  </p>
+
+  <form class="sync__form" (ngSubmit)="enviar()">
+    <label class="field">
+      <span>Ano da eleição</span>
+      <select name="ano" [(ngModel)]="ano">
+        <option *ngFor="let a of anos" [ngValue]="a">{{ a }}</option>
+      </select>
+    </label>
+    <label class="field">
+      <span>UF ou BRASIL</span>
+      <select name="uf" [(ngModel)]="uf">
+        <option value="BRASIL">BRASIL (arquivo nacional)</option>
+        <option *ngFor="let u of ufs" [value]="u">{{ u }}</option>
+      </select>
+    </label>
+    <label class="field field--wide">
+      <span>Token (opcional)</span>
+      <input
+        type="password"
+        name="token"
+        [(ngModel)]="syncToken"
+        placeholder="Só se o servidor tiver SYNC_TOKEN configurado"
+        autocomplete="off"
+      />
+    </label>
+    <button type="submit" class="btn btn--primary" [disabled]="loading()">
+      {{ loading() ? 'Sincronizando…' : 'Iniciar importação' }}
+    </button>
+  </form>
+
+  <p class="sync__error" *ngIf="error() as err">{{ err }}</p>
+
+  <div class="sync__ok" *ngIf="result() as r">
+    <h2>Concluído</h2>
+    <ul>
+      <li>Candidatos processados: <strong>{{ r.candidatosProcessados | number }}</strong></li>
+      <li>Registros de cassação: <strong>{{ r.registrosCassacaoProcessados | number }}</strong></li>
+    </ul>
+    <p class="sync__sources">
+      Fontes:
+      <a [href]="r.fontes.candidatosZip" target="_blank" rel="noopener">candidatos</a>
+      ·
+      <a [href]="r.fontes.cassacaoZip" target="_blank" rel="noopener">cassação</a>
+    </p>
+  </div>
+</section>
