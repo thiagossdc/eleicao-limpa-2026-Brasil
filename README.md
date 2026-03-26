@@ -1,4 +1,4 @@
-# Eleicao Limpa 2026
+# Eleição Limpa 2026
 
 Aplicacao full stack para consultar candidaturas e sinais de cassacao a partir de dados oficiais do TSE.
 
